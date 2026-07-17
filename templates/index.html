@@ -1,0 +1,395 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="MailPilot Pro — AI 外贸邮件工作台">
+    <meta property="og:title" content="MailPilot Pro — AI 外贸邮件工作台">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c766e'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='20' font-weight='bold'%3EM%3C/text%3E%3C/svg%3E">
+    <title>MailPilot Pro — AI 外贸邮件工作台</title>
+    <style>
+        :root {
+            --ink:#172126; --muted:#66747a; --line:#dfe7e5; --paper:#f7faf8;
+            --card:#fff; --teal:#0c766e; --teal-dark:#075e58; --coral:#e87558;
+            --shadow:0 18px 50px rgba(19,52,47,.10);
+        }
+        * { box-sizing:border-box; }
+        body { margin:0; color:var(--ink); background:var(--paper); font-family:Inter,system-ui,"Microsoft YaHei",sans-serif; }
+        
+        /* Top Bar */
+        .topbar { height:60px; display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:auto; padding:0 24px; }
+        .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; }
+        .brand-mark { width:32px; height:32px; display:grid; place-items:center; color:white; background:var(--teal); border-radius:8px; font-size:15px; }
+        .badge { background:var(--coral); color:white; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:700; }
+        
+        /* Shell */
+        .shell { max-width:1200px; margin:0 auto; padding:24px 24px 60px; }
+        
+        /* Hero */
+        .hero { text-align:center; padding:24px 0 32px; }
+        .hero h1 { font-size:clamp(28px,4vw,48px); letter-spacing:-1.5px; margin:8px 0 12px; }
+        .hero p { color:var(--muted); font-size:16px; max-width:600px; margin:0 auto; line-height:1.6; }
+        
+        /* Tabs */
+        .tabs { display:flex; gap:4px; margin-bottom:20px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:6px; }
+        .tab { flex:1; padding:12px 16px; border:none; background:transparent; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600; color:var(--muted); transition:all .2s; }
+        .tab.active { background:var(--teal); color:white; }
+        .tab:hover:not(.active) { background:var(--paper); }
+        
+        /* Panels */
+        .panel { background:var(--card); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); padding:28px; display:none; }
+        .panel.active { display:block; }
+        .panel h2 { margin:0 0 6px; font-size:20px; }
+        .panel-sub { color:var(--muted); font-size:13px; margin:0 0 20px; }
+        
+        /* Form */
+        label { display:block; font-weight:600; font-size:14px; margin:16px 0 6px; }
+        label:first-of-type { margin-top:0; }
+        input[type="text"], textarea, select {
+            width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:8px;
+            font-size:14px; font-family:inherit; background:var(--paper); transition:border .2s;
+        }
+        input:focus, textarea:focus, select:focus { outline:none; border-color:var(--teal); }
+        textarea { min-height:100px; resize:vertical; }
+        
+        /* Buttons */
+        .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 28px; border:none; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; transition:all .2s; }
+        .btn-primary { background:var(--teal); color:white; }
+        .btn-primary:hover { background:var(--teal-dark); }
+        .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+        .btn-sm { padding:8px 16px; font-size:13px; }
+        
+        /* Result */
+        .result-area { margin-top:20px; background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:20px; white-space:pre-wrap; font-size:14px; line-height:1.7; min-height:120px; max-height:600px; overflow-y:auto; }
+        .result-actions { display:flex; gap:8px; margin-bottom:12px; }
+        
+        /* Notice */
+        .notice { background:#fef3f2; border:1px solid #fecaca; color:#b91c1c; padding:12px 16px; border-radius:8px; font-size:14px; margin-bottom:16px; display:none; }
+        .notice.show { display:block; }
+        
+        /* Analysis Cards */
+        .analysis-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:16px 0; }
+        .analysis-card { background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:14px; }
+        .analysis-card .label { font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; }
+        .analysis-card .value { font-size:15px; font-weight:700; margin-top:4px; }
+        .priority-high { color:#dc2626; }
+        .priority-medium { color:#ea580c; }
+        .priority-low { color:#16a34a; }
+        
+        /* Product Match */
+        .product-match { background:linear-gradient(135deg,#ecfdf5,#d1fae5); border:1px solid #6ee7b7; border-radius:8px; padding:14px; margin:12px 0; }
+        .product-match h4 { margin:0 0 8px; color:#065f46; font-size:14px; }
+        .product-match p { margin:4px 0; font-size:13px; color:#047857; }
+        
+        /* Toast */
+        .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#1a2332; color:#fff; padding:12px 24px; border-radius:10px; font-size:14px; font-weight:600; z-index:9999; opacity:0; transition:all .3s; pointer-events:none; }
+        .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+        
+        /* Spinner */
+        .spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,.3); border-top-color:white; border-radius:50%; animation:spin .6s linear infinite; display:none; }
+        .spinner.show { display:inline-block; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        
+        /* Footer */
+        .footer { text-align:center; padding:32px 0 0; color:var(--muted); font-size:13px; }
+        .footer a { color:var(--teal); text-decoration:none; font-weight:600; }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-mark">M</span>
+            <span>MailPilot</span>
+            <span class="badge">PRO</span>
+        </div>
+        <a class="badge" href="mailto:cl18603255@gmail.com" style="background:var(--teal);color:white;text-decoration:none;padding:8px 16px;border-radius:8px;font-size:13px;">企业版咨询</a>
+    </header>
+
+    <main class="shell">
+        <section class="hero">
+            <h1>AI 驱动的外贸邮件工作台</h1>
+            <p>输入产品与客户询盘，一键生成专业邮件、报价单、WhatsApp 话术。让每一封外贸邮件都更接近成交。</p>
+        </section>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('email')">📧 邮件生成</button>
+            <button class="tab" onclick="switchTab('analyze')">🔍 询盘分析</button>
+            <button class="tab" onclick="switchTab('quotation')">📋 报价单</button>
+            <button class="tab" onclick="switchTab('products')">📦 产品库</button>
+        </div>
+
+        <!-- Panel 1: Email Generation -->
+        <div class="panel active" id="panel-email">
+            <h2>创建销售邮件</h2>
+            <p class="panel-sub">填写产品信息和客户背景，AI 自动生成全套邮件方案</p>
+            
+            <form method="post" id="email-form">
+                <label for="product">产品或服务 *</label>
+                <input id="product" name="product" value="{{ product|default('', true) }}" placeholder="例如：太阳能庭院灯、LED 灯串" required>
+                
+                <label for="requirement">客户需求与沟通背景 *</label>
+                <textarea id="requirement" name="requirement" placeholder="例如：客户来自德国，想了解 MOQ、交期和定制包装方案" required>{{ requirement|default('', true) }}</textarea>
+                
+                <label for="style">邮件风格</label>
+                <select id="style" name="style">
+                    <option value="formal" {% if style=='formal' %}selected{% endif %}>正式专业（适合首次接触重要客户）</option>
+                    <option value="friendly" {% if style=='friendly' %}selected{% endif %}>友好亲切（适合老客户维护）</option>
+                    <option value="concise" {% if style=='concise' %}selected{% endif %}>简洁直接（适合快节奏沟通）</option>
+                </select>
+                
+                <button class="btn btn-primary" id="submit-btn" type="submit">
+                    <span id="button-label">生成邮件方案</span>
+                    <span class="spinner" id="spinner"></span>
+                </button>
+            </form>
+            
+            {% if result %}
+            <div style="margin-top:24px;">
+                <div class="result-actions">
+                    <button class="btn btn-sm" onclick="copyResult()" style="background:var(--teal);color:white;">复制结果</button>
+                    <button class="btn btn-sm" onclick="downloadResult()" style="background:var(--muted);color:white;">下载 TXT</button>
+                </div>
+                <div class="result-area" id="result">{{ result }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Panel 2: Inquiry Analysis -->
+        <div class="panel" id="panel-analyze">
+            <h2>询盘智能分析</h2>
+            <p class="panel-sub">粘贴客户询盘，AI 自动分析意图、优先级和回复策略</p>
+            
+            <label for="inquiry-text">客户询盘内容</label>
+            <textarea id="inquiry-text" placeholder="粘贴客户的询盘邮件或消息内容..."></textarea>
+            
+            <button class="btn btn-primary" style="margin-top:16px;" onclick="analyzeInquiry()">分析询盘</button>
+            
+            <div id="analysis-result" style="display:none; margin-top:20px;">
+                <div class="analysis-grid" id="analysis-cards"></div>
+                <div class="result-area" id="analysis-detail"></div>
+            </div>
+        </div>
+
+        <!-- Panel 3: Quotation -->
+        <div class="panel" id="panel-quotation">
+            <h2>报价单生成</h2>
+            <p class="panel-sub">根据客户询盘自动生成专业英文报价单</p>
+            
+            <label for="quote-inquiry">客户询盘</label>
+            <textarea id="quote-inquiry" placeholder="客户想要什么产品？什么数量？什么要求？"></textarea>
+            
+            <button class="btn btn-primary" style="margin-top:16px;" onclick="generateQuotation()">生成报价单</button>
+            
+            <div id="quotation-result" style="display:none; margin-top:20px;">
+                <div class="result-area" id="quotation-output"></div>
+                <div class="result-actions" style="margin-top:12px;">
+                    <button class="btn btn-sm" onclick="copyText('quotation-output')" style="background:var(--teal);color:white;">复制</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel 4: Product Library -->
+        <div class="panel" id="panel-products">
+            <h2>产品库管理</h2>
+            <p class="panel-sub">管理你的产品目录，AI 会根据产品库自动匹配推荐</p>
+            
+            <div id="product-list" style="margin:16px 0;"></div>
+            
+            <hr style="border:none;border-top:1px solid var(--line);margin:20px 0;">
+            
+            <h3 style="font-size:16px;margin:0 0 12px;">添加新产品</h3>
+            <form id="add-product-form" onsubmit="addProduct(event)">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <input type="text" id="prod-name" placeholder="产品名称 *" required>
+                    <input type="text" id="prod-category" placeholder="类别 *" required>
+                    <input type="text" id="prod-price" placeholder="价格 *" required>
+                    <input type="text" id="prod-moq" placeholder="最小起订量">
+                    <input type="text" id="prod-leadtime" placeholder="交货期">
+                    <input type="text" id="prod-features" placeholder="产品特点">
+                </div>
+                <button class="btn btn-primary btn-sm" style="margin-top:12px;" type="submit">添加产品</button>
+            </form>
+        </div>
+
+        <div class="notice" id="notice" role="alert">{{ error|default('', true) }}</div>
+        
+        <footer class="footer">
+            <span>适合外贸业务员、工厂和跨境团队</span><br>
+            <a href="mailto:cl18603255@gmail.com?subject=MailPilot%20企业版咨询">需要批量定制或企业版？联系我们 →</a>
+        </footer>
+    </main>
+
+    <div class="toast" id="toast" role="alert"></div>
+
+    <script>
+    // Tab switching
+    function switchTab(name) {
+        document.querySelectorAll('.tab').forEach((t,i) => {
+            t.classList.toggle('active', ['email','analyze','quotation','products'][i] === name);
+        });
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('panel-' + name).classList.add('active');
+        
+        if (name === 'products') loadProducts();
+    }
+
+    // Toast
+    function showToast(msg, type='success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast ' + type + ' show';
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Copy / Download
+    function copyResult() {
+        const el = document.getElementById('result');
+        if (el) {
+            navigator.clipboard.writeText(el.textContent).then(() => showToast('已复制到剪贴板'));
+        }
+    }
+    function downloadResult() {
+        const el = document.getElementById('result');
+        if (el) {
+            const blob = new Blob([el.textContent], {type:'text/plain;charset=utf-8'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'mailpilot-sales-copy.txt';
+            a.click();
+            showToast('文件已下载');
+        }
+    }
+    function copyText(id) {
+        const el = document.getElementById(id);
+        if (el) {
+            navigator.clipboard.writeText(el.textContent).then(() => showToast('已复制'));
+        }
+    }
+
+    // API: Analyze Inquiry
+    async function analyzeInquiry() {
+        const text = document.getElementById('inquiry-text').value.trim();
+        if (!text) { showToast('请输入询盘内容', 'error'); return; }
+        
+        showToast('正在分析询盘...', 'success');
+        try {
+            const res = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({inquiry: text})
+            });
+            const data = await res.json();
+            
+            if (data.error) { showToast(data.error, 'error'); return; }
+            
+            document.getElementById('analysis-result').style.display = 'block';
+            
+            // Priority badge
+            const priClass = data.priority === '高' ? 'priority-high' : data.priority === '低' ? 'priority-low' : 'priority-medium';
+            
+            document.getElementById('analysis-cards').innerHTML = `
+                <div class="analysis-card"><div class="label">客户意图</div><div class="value">${data.customer_intent || '未知'}</div></div>
+                <div class="analysis-card"><div class="label">优先级</div><div class="value ${priClass}">${data.priority || '中'}</div></div>
+                <div class="analysis-card"><div class="label">关键需求</div><div class="value">${(data.key_requirements||[]).join(', ') || '暂无'}</div></div>
+                <div class="analysis-card"><div class="label">回复策略</div><div class="value">${data.strategy || ''}</div></div>
+            `;
+            
+            let detail = '';
+            if (data.missing_info && data.missing_info.length > 0) {
+                detail += '⚠️ 需要补充的信息：\n' + data.missing_info.map(i => '  - ' + i).join('\n') + '\n\n';
+            }
+            detail += '💡 建议回复策略：\n' + (data.strategy || '根据具体情况灵活应对');
+            
+            document.getElementById('analysis-detail').textContent = detail;
+            showToast('分析完成！');
+        } catch(e) {
+            showToast('分析失败：' + e.message, 'error');
+        }
+    }
+
+    // API: Generate Quotation
+    async function generateQuotation() {
+        const text = document.getElementById('quote-inquiry').value.trim();
+        if (!text) { showToast('请输入询盘内容', 'error'); return; }
+        
+        showToast('正在生成报价单...', 'success');
+        try {
+            const res = await fetch('/api/quotation', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({inquiry: text})
+            });
+            const data = await res.json();
+            
+            if (data.error) { showToast(data.error, 'error'); return; }
+            
+            document.getElementById('quotation-result').style.display = 'block';
+            document.getElementById('quotation-output').textContent = data.quotation || '生成失败，请重试';
+            showToast('报价单已生成！');
+        } catch(e) {
+            showToast('生成失败：' + e.message, 'error');
+        }
+    }
+
+    // API: Load Products
+    async function loadProducts() {
+        try {
+            const res = await fetch('/api/products');
+            const data = await res.json();
+            
+            if (data.products.length === 0) {
+                document.getElementById('product-list').innerHTML = '<p style="color:var(--muted);">产品库为空，请添加产品</p>';
+                return;
+            }
+            
+            let html = '<div style="display:grid;gap:8px;">';
+            data.products.forEach(p => {
+                html += `<div class="product-match">
+                    <h4>${p.name || 'N/A'} <span style="font-weight:400;color:var(--muted);font-size:12px;">| ${p.category || ''}</span></h4>
+                    <p>💰 ${p.price || '面议'} | 📦 MOQ: ${p.moq || 'N/A'} | ⏱ ${p.lead_time || 'N/A'}</p>
+                    <p style="margin-bottom:0;">✨ ${p.features || ''}</p>
+                </div>`;
+            });
+            html += '</div>';
+            html += `<p style="color:var(--muted);font-size:13px;margin-top:8px;">共 ${data.count} 个产品</p>`;
+            document.getElementById('product-list').innerHTML = html;
+        } catch(e) {
+            document.getElementById('product-list').innerHTML = '<p style="color:var(--muted);">加载失败</p>';
+        }
+    }
+
+    // API: Add Product
+    async function addProduct(e) {
+        e.preventDefault();
+        const product = {
+            name: document.getElementById('prod-name').value,
+            category: document.getElementById('prod-category').value,
+            price: document.getElementById('prod-price').value,
+            moq: document.getElementById('prod-moq').value,
+            lead_time: document.getElementById('prod-leadtime').value,
+            features: document.getElementById('prod-features').value,
+            hs_code: ''
+        };
+        
+        try {
+            const res = await fetch('/api/products', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify(product)
+            });
+            const data = await res.json();
+            if (data.message) {
+                showToast('产品已添加！');
+                document.getElementById('add-product-form').reset();
+                loadProducts();
+            } else {
+                showToast(data.error || '添加失败', 'error');
+            }
+        } catch(err) {
+            showToast('添加失败：' + err.message, 'error');
+        }
+    }
+    </script>
+</body>
+</html>

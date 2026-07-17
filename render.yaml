@@ -1,0 +1,7 @@
+﻿{
+  "buildCommand": "",
+  "startCommand": "gunicorn -c gunicorn.conf.py app:app",
+  "env": [
+    { "key": "DEEPSEEK_API_KEY", "value": "your-api-key-here" }
+  ]
+}
