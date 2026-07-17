@@ -171,6 +171,13 @@ def api_generate():
     })
 
 
+
+@app.route('/api/products', methods=['GET'])
+def api_products():
+    prods = load_products()
+    return jsonify({'products': prods, 'count': len(prods)})
+
+
 @app.route('/api/quotation', methods=['POST'])
 @billable('quotation', credits=1.5)
 def api_quote():
