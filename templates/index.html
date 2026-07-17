@@ -81,21 +81,21 @@ textarea{min-height:100px;resize:vertical}
 </style></head><body>
 <header class="topbar"><div class="brand"><span class="brand-mark">M</span><span>MailPilot</span><span class="badge">PRO v3</span></div>
 <div class="topbar-right" id="topbar-right">
-<div id="guest-nav"><button class="btn-login" onclick="showModal(auth)">登录/注册</button></div>
-<div id="user-nav" style="display:none"><div class="balance-display" onclick="showModal(recharge)">💰 <span id="user-balance">0.00</span> 元</div>
-<button class="btn-recharge" onclick="showModal(recharge)">充值</button>
+<div id="guest-nav"><button class="btn-login" onclick="showModal('auth')">登录/注册</button></div>
+<div id="user-nav" style="display:none"><div class="balance-display" onclick="showModal('recharge')">💰 <span id="user-balance">0.00</span> 元</div>
+<button class="btn-recharge" onclick="showModal('recharge')">充值</button>
 <div class="user-menu"><div class="user-avatar" id="user-avatar" onclick="toggleDropdown()">U</div>
-<div class="dropdown" id="user-dropdown"><div class="dropdown-item" onclick="showModal(profile)">👤 个人中心</div>
-<div class="dropdown-item" onclick="showModal(usage)">📊 用量统计</div>
+<div class="dropdown" id="user-dropdown"><div class="dropdown-item" onclick="showModal('profile')">👤 个人中心</div>
+<div class="dropdown-item" onclick="showModal('usage')">📊 用量统计</div>
 <div class="dropdown-divider"></div><div class="dropdown-item logout" onclick="logout()">🚪 退出登录</div></div></div></div></div></header>
 <main class="shell"><section class="hero"><h1>AI 驱动的外贸邮件工作台</h1>
 <p>输入产品与客户询盘，一键生成专业邮件、报价单、WhatsApp 话术。</p></section>
-<div class="tabs"><button class="tab active" onclick="switchTab(email)">📧 邮件生成</button>
-<button class="tab" onclick="switchTab(analyze)">🔍 询盘分析</button>
-<button class="tab" onclick="switchTab(quotation)">📋 报价单</button>
-<button class="tab" onclick="switchTab(products)">📦 产品库</button></div>
+<div class="tabs"><button class="tab active" onclick="switchTab('email')">📧 邮件生成</button>
+<button class="tab" onclick="switchTab('analyze')">🔍 询盘分析</button>
+<button class="tab" onclick="switchTab('quotation')">📋 报价单</button>
+<button class="tab" onclick="switchTab('products')">📦 产品库</button></div>
 <div class="panel active" id="panel-email"><h2>创建销售邮件</h2><p class="panel-sub">填写产品信息，AI 自动生成全套邮件方案</p>
-<div class="login-hint" id="email-hint" style="display:none"><strong>🔒 登录后使用</strong> — 注册送100元，每次生成消耗2元 <button class="btn btn-sm" style="margin-left:12px" onclick="showModal(auth)">登录</button></div>
+<div class="login-hint" id="email-hint" style="display:none"><strong>🔒 登录后使用</strong> — 注册送100元，每次生成消耗2元 <button class="btn btn-sm" style="margin-left:12px" onclick="showModal('auth')">登录</button></div>
 <form method="post" id="email-form"><label for="product">产品或服务 *</label>
 <input id="product" name="product" value="{{ product|default('', true) }}" placeholder="例如：太阳能庭院灯" required>
 <label for="requirement">客户需求 *</label>
@@ -107,16 +107,16 @@ textarea{min-height:100px;resize:vertical}
 {% if result %}<div style="margin-top:24px"><div class="result-actions"><button class="btn btn-sm" onclick="copyResult()" style="background:var(--teal);color:white">复制</button><button class="btn btn-sm" onclick="downloadResult()" style="background:var(--muted);color:white">下载</button></div>
 <div class="result-area" id="result">{{ result }}</div></div>{% endif %}</div>
 <div class="panel" id="panel-analyze"><h2>询盘智能分析</h2><p class="panel-sub">AI 自动分析客户意图、优先级和回复策略</p>
-<div class="login-hint" id="analyze-hint" style="display:none"><strong>🔒 登录后使用</strong> — 每次分析消耗0.5元 <button class="btn btn-sm" style="margin-left:12px" onclick="showModal(auth)">登录</button></div>
+<div class="login-hint" id="analyze-hint" style="display:none"><strong>🔒 登录后使用</strong> — 每次分析消耗0.5元 <button class="btn btn-sm" style="margin-left:12px" onclick="showModal('auth')">登录</button></div>
 <label for="inquiry-text">客户询盘内容</label><textarea id="inquiry-text" placeholder="粘贴客户的询盘邮件或消息内容..."></textarea>
 <button class="btn btn-primary" style="margin-top:16px" onclick="analyzeInquiry()">分析询盘</button>
 <div id="analysis-result" style="display:none;margin-top:20px"><div class="analysis-grid" id="analysis-cards"></div><div class="result-area" id="analysis-detail"></div></div></div>
 <div class="panel" id="panel-quotation"><h2>报价单生成</h2><p class="panel-sub">自动生成专业英文报价单</p>
-<div class="login-hint" id="quote-hint" style="display:none"><strong>🔒 登录后使用</strong> — 每次生成消耗1.5元 <button class="btn btn-sm" style="margin-left:12px" onclick="showModal(auth)">登录</button></div>
+<div class="login-hint" id="quote-hint" style="display:none"><strong>🔒 登录后使用</strong> — 每次生成消耗1.5元 <button class="btn btn-sm" style="margin-left:12px" onclick="showModal('auth')">登录</button></div>
 <label for="quote-inquiry">客户询盘</label><textarea id="quote-inquiry" placeholder="客户想要什么产品？"></textarea>
 <button class="btn btn-primary" style="margin-top:16px" onclick="generateQuotation()">生成报价单</button>
 <div id="quotation-result" style="display:none;margin-top:20px"><div class="result-area" id="quotation-output"></div>
-<div class="result-actions" style="margin-top:12px"><button class="btn btn-sm" onclick="copyText(quotation-output)" style="background:var(--teal);color:white">复制</button></div></div></div>
+<div class="result-actions" style="margin-top:12px"><button class="btn btn-sm" onclick="copyText('quotation-output')" style="background:var(--teal);color:white">复制</button></div></div></div>
 <div class="panel" id="panel-products"><h2>产品库管理</h2><p class="panel-sub">AI 会根据产品库自动匹配推荐</p>
 <div id="product-list" style="margin:16px 0"></div><hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
 <h3 style="font-size:16px;margin:0 0 12px">添加新产品</h3>
@@ -127,7 +127,7 @@ textarea{min-height:100px;resize:vertical}
 <button class="btn btn-primary btn-sm" style="margin-top:12px" type="submit">添加产品</button></form></div>
 <footer class="footer"><span>适合外贸业务员、工厂和跨境团队</span><br>
 <a href="mailto:cl18603255@gmail.com?subject=MailPilot%20企业版咨询">需要企业版？联系我们 →</a></footer></main>
-<div class="modal-overlay" id="modal-auth"><div class="modal"><button class="close-modal" onclick="hideModal(auth)">&times;</button>
+<div class="modal-overlay" id="modal-auth"><div class="modal"><button class="close-modal" onclick="hideModal('auth')">&times;</button>
 <div id="auth-login"><h2>欢迎回来 👋</h2><p>登录你的 MailPilot 账户</p>
 <div class="form-group"><label>用户名</label><input type="text" id="login-username" placeholder="请输入用户名"></div>
 <div class="form-group"><label>密码</label><input type="password" id="login-password" placeholder="请输入密码"></div>
@@ -140,23 +140,23 @@ textarea{min-height:100px;resize:vertical}
 <div class="form-group"><label>密码 * (至少6位)</label><input type="password" id="reg-password" placeholder="至少6位字符"></div>
 <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="doRegister()">注册并领取100元</button>
 <p class="switch-link" onclick="showLogin()">已有账户？<strong>返回登录</strong></p></div></div></div>
-<div class="modal-overlay" id="modal-recharge"><div class="modal" style="max-width:500px"><button class="close-modal" onclick="hideModal(recharge)">&times;</button>
+<div class="modal-overlay" id="modal-recharge"><div class="modal" style="max-width:500px"><button class="close-modal" onclick="hideModal('recharge')">&times;</button>
 <h2>💳 账户充值</h2><p>选择充值套餐</p>
 <div class="recharge-grid" id="recharge-plans">
-<div class="recharge-card" onclick="selectPlan(this,basic)"><div class="amount">¥50</div><div class="desc">充50送5<br>到账55元</div></div>
-<div class="recharge-card" onclick="selectPlan(this,standard)"><div class="amount">¥100</div><div class="desc">充100送15<br>到账115元</div></div>
-<div class="recharge-card" onclick="selectPlan(this,pro)"><div class="amount">¥300</div><div class="desc">充300送60<br>到账360元</div></div>
-<div class="recharge-card" onclick="selectPlan(this,enterprise)"><div class="amount">¥1000</div><div class="desc">充1000送300<br>到账1300元</div></div>
+<div class="recharge-card" onclick="selectPlan(this, 'basic')"><div class="amount">¥50</div><div class="desc">充50送5<br>到账55元</div></div>
+<div class="recharge-card" onclick="selectPlan(this, 'standard')"><div class="amount">¥100</div><div class="desc">充100送15<br>到账115元</div></div>
+<div class="recharge-card" onclick="selectPlan(this, 'pro')"><div class="amount">¥300</div><div class="desc">充300送60<br>到账360元</div></div>
+<div class="recharge-card" onclick="selectPlan(this, 'enterprise')"><div class="amount">¥1000</div><div class="desc">充1000送300<br>到账1300元</div></div>
 </div><div id="qr-section" style="display:none;text-align:center;margin:20px 0">
 <div style="width:200px;height:200px;margin:0 auto 12px;background:var(--paper);border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-size:48px">📱</div>
 <div style="font-size:14px;color:var(--muted)">支付金额：<strong id="qr-amount" style="color:var(--ink);font-size:20px">¥100</strong></div>
 <div style="font-size:12px;margin-top:4px">请使用微信扫码支付</div>
 <div style="margin-top:16px"><button class="btn btn-primary btn-sm" onclick="simulatePayment()">模拟支付成功</button>
-<button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="hideModal(recharge)">取消</button></div></div>
+<button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="hideModal('recharge')">取消</button></div></div>
 <div id="order-status" style="display:none;text-align:center;margin-top:16px"><p style="color:var(--green);font-weight:700">✅ 支付成功！余额已到账</p></div></div></div>
-<div class="modal-overlay" id="modal-profile"><div class="modal"><button class="close-modal" onclick="hideModal(profile)">&times;</button>
+<div class="modal-overlay" id="modal-profile"><div class="modal"><button class="close-modal" onclick="hideModal('profile')">&times;</button>
 <h2>👤 个人中心</h2><div id="profile-content" style="margin-top:16px"><p style="color:var(--muted)">加载中...</p></div></div></div>
-<div class="modal-overlay" id="modal-usage"><div class="modal" style="max-width:500px"><button class="close-modal" onclick="hideModal(usage)">&times;</button>
+<div class="modal-overlay" id="modal-usage"><div class="modal" style="max-width:500px"><button class="close-modal" onclick="hideModal('usage')">&times;</button>
 <h2>📊 用量统计</h2><div class="stats-grid" id="usage-stats" style="margin:16px 0">
 <div class="stat-card"><div class="num" id="stat-total">-</div><div class="lbl">总请求</div></div>
 <div class="stat-card"><div class="num" id="stat-today">-</div><div class="lbl">今日</div></div>
